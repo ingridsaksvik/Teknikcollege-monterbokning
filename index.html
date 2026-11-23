@@ -1,180 +1,56 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Teknikcollege Dalarna - Monterbokning</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f7fa;
-      margin: 0;
-      color: #222;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 30px 20px;
-    }
-
-    h1, h2 {
-      color: #17365d;
-    }
-
-    .intro, .calendar-box, .booking-box {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      margin-bottom: 25px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
-
-    .transport-info {
-      background: #fff4cc;
-      border-left: 5px solid #f2c94c;
-      padding: 15px;
-      margin-top: 15px;
-    }
-
-    .calendar-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .calendar-header h2 {
-      margin: 0;
-      text-align: center;
-    }
-
-    .nav-button {
-      margin: 0;
-      background: #17365d;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 10px 15px;
-      cursor: pointer;
-    }
-
-    .weekdays, .calendar {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-    }
-
-    .weekday {
-      text-align: center;
-      font-weight: bold;
-      color: #17365d;
-      padding: 8px 2px;
-    }
-
-    .day {
-      min-height: 125px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      padding: 7px;
-      background: #fff;
-    }
-
-    .day.empty {
-      background: #f4f4f4;
-      border-color: #eee;
-    }
-
-    .date-number {
-      font-weight: bold;
-      margin-bottom: 7px;
-    }
-
-    .monter {
-      display: block;
-      width: 100%;
-      margin: 5px 0;
-      padding: 7px 5px;
-      border: none;
-      border-radius: 4px;
-      font-size: 12px;
-      cursor: pointer;
-      text-align: left;
-    }
-
-    .available {
-      background: #dff4e5;
-      color: #155d2d;
-    }
-
-    .available:hover {
-      background: #c8ebd2;
-    }
-
-    .booked {
-      background: #e7ebf0;
-      color: #555;
-      cursor: default;
-    }
-
-    .past {
-      opacity: 0.55;
-    }
-
-    label {
-      display: block;
-      font-weight: bold;
-      margin-top: 15px;
-      margin-bottom: 5px;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #bbb;
-      border-radius: 5px;
-    }
-
-    textarea {
-      min-height: 80px;
-    }
-
-    .submit-button {
-      margin-top: 20px;
-      padding: 12px 20px;
-      background: #17365d;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .submit-button:disabled {
-      opacity: 0.6;
-      cursor: wait;
-    }
-
-    #message {
-      margin-top: 15px;
-      font-weight: bold;
-    }
-
-    .success {
-      color: #16743b;
-    }
-
-    .error {
-      color: #b42318;
-    }
-
-    .booking-box {
-      display: none;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Teknikcollege Dalarna - Monterbokning</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f5f7fa;margin:0;color:#222}main{max-width:1100px;margin:auto;padding:25px}h1,h2{color:#17365d}.box{background:white;padding:20px;border-radius:10px;margin-bottom:20px}.info{background:#fff4cc;border-left:5px solid #f2c94c;padding:15px}.head{display:flex;justify-content:space-between;align-items:center}button{cursor:pointer}.nav,.submit{background:#17365d;color:white;border:0;border-radius:5px;padding:10px}.week,.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.week div{text-align:center;font-weight:bold;padding:8px}.day{border:1px solid #ddd;border-radius:5px;padding:5px;min-height:115px}.empty{background:#eee}.num{font-weight:bold;margin-bottom:5px}.slot{width:100%;border:0;border-radius:4px;padding:7px 3px;margin:3px 0;text-align:left}.free{background:#dff4e5;color:#155d2d}.busy{background:#e7ebf0;color:#555;cursor:default}#formBox{display:none}label{display:block;font-weight:bold;margin-top:12px}input,textarea{width:100%;box-sizing:border-box;padding:9px;margin-top:4px}textarea{min-height:70px}#message{font-weight:bold;margin-top:12px}.ok{color:green}.error{color:#b42318}@media(max-width:700px){main{padding:10px}.day{min-height:90px;padding:2px}.slot{font-size:9px}.week div{font-size:11px;padding:4px}.head h2{font-size:18px}.nav{padding:7px;font-size:11px}}
+</style>
+</head>
+<body>
+<main>
+<h1>Boka Teknikcollege Dalarnas montrar</h1>
+<div class="box">
+<p>Här ser du när <strong>Monter 1</strong> och <strong>Monter 2</strong> är lediga. Klicka på en ledig monter för att boka.</p>
+<div class="info"><strong>Viktigt om transporten</strong><p>Bokningen gäller själva montern. Det är inte en beställning där montern automatiskt levereras till platsen.</p><p>Inom Teknikcollege Dalarna försöker vi hjälpas åt och samordna transporterna. Det kan därför innebära att du behöver hämta montern där den finns eller hjälpa till att lämna den vidare till nästa bokning.</p></div>
+</div>
+<div class="box">
+<div class="head"><button class="nav" id="prev">‹ Föregående</button><h2 id="title"></h2><button class="nav" id="next">Nästa ›</button></div>
+<div class="week"><div>Mån</div><div>Tis</div><div>Ons</div><div>Tor</div><div>Fre</div><div>Lör</div><div>Sön</div></div>
+<div id="calendar" class="calendar"></div>
+</div>
+<div class="box" id="formBox">
+<h2 id="formTitle">Boka monter</h2>
+<form id="form">
+<label>Datum</label><input type="date" id="date" readonly required>
+<label>Monter</label><input type="text" id="monter" readonly required>
+<label>Namn</label><input type="text" id="name" required>
+<label>Skola/organisation</label><input type="text" id="organisation" required>
+<label>E-post</label><input type="email" id="email" required>
+<label>Aktivitet/evenemang</label><input type="text" id="event">
+<label>Ort/plats</label><input type="text" id="location">
+<label>Kommentar</label><textarea id="comment"></textarea>
+<button class="submit" type="submit" id="submit">Boka monter</button><div id="message"></div>
+</form>
+</div>
+</main>
+<script type="module">
+import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const db=createClient('https://soxmicgzyoozbjmovdrj.supabase.co','sb_publishable_Q2LaFgXGVya8XwwqIXyKeQ_jIuzE8hM');
+const cal=document.getElementById('calendar'),title=document.getElementById('title'),formBox=document.getElementById('formBox'),msg=document.getElementById('message');
+let view,bookings=[];
+view=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+const months=['Januari','Februari','Mars','April','Maj','Juni','Juli','Augusti','September','Oktober','November','December'];
+function ds(y,m,d){return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0')}
+function booked(date,monter){return bookings.find(b=>b.booking_date===date&&b.monter===monter)}
+async function load(){const{data,error}=await db.from('bookings').select('booking_date,monter,organisation');if(error){console.error(error);return}bookings=data||[];render()}
+function render(){cal.innerHTML='';const y=view.getFullYear(),m=view.getMonth();title.textContent=months[m]+' '+y;let first=new Date(y,m,1).getDay();if(first===0)first=7;for(let i=1;i<first;i++){const e=document.createElement('div');e.className='day empty';cal.appendChild(e)}const days=new Date(y,m+1,0).getDate();for(let d=1;d<=days;d++){const date=ds(y,m,d),box=document.createElement('div');box.className='day';box.innerHTML='<div class="num">'+d+'</div>';['Monter 1','Monter 2'].forEach(monter=>{const b=booked(date,monter),btn=document.createElement('button');btn.type='button';btn.className='slot '+(b?'busy':'free');if(b){btn.textContent=monter+': Bokad – '+b.organisation;btn.disabled=true}else{btn.textContent=monter+': Ledig';btn.onclick=()=>openForm(date,monter)}box.appendChild(btn)});cal.appendChild(box)}}
+function openForm(date,monter){document.getElementById('date').value=date;document.getElementById('monter').value=monter;document.getElementById('formTitle').textContent='Boka '+monter;msg.textContent='';formBox.style.display='block';formBox.scrollIntoView({behavior:'smooth'})}
+document.getElementById('prev').onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()-1,1);render()};
+document.getElementById('next').onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()+1,1);render()};
+document.getElementById('form').onsubmit=async e=>{e.preventDefault();const button=document.getElementById('submit');button.disabled=true;button.textContent='Bokar...';const row={booking_date:document.getElementById('date').value,monter:document.getElementById('monter').value,name:document.getElementById('name').value,organisation:document.getElementById('organisation').value,email:document.getElementById('email').value,event_name:document.getElementById('event').value,location:document.getElementById('location').value,comment:document.getElementById('comment').value};const{error}=await db.from('bookings').insert([row]);if(error){msg.className='error';msg.textContent=error.code==='23505'?'Den här montern är redan bokad detta datum.':'Bokningen kunde inte sparas.'}else{msg.className='ok';msg.textContent='Klart! Montern är bokad.';await load()}button.disabled=false;button.textContent='Boka monter'};
+load();
+</script>
+</body>
+</html>
