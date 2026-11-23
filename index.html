@@ -35,22 +35,22 @@ body{font-family:Arial,sans-serif;background:#f5f7fa;margin:0;color:#222}main{ma
 </form>
 </div>
 </main>
-<script type="module">
-import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
-const db=createClient('https://soxmicgzyoozbjmovdrj.supabase.co','sb_publishable_Q2LaFgXGVya8XwwqIXyKeQ_jIuzE8hM');
+<script>
+const URL='https://soxmicgzyoozbjmovdrj.supabase.co';
+const KEY='sb_publishable_Q2LaFgXGVya8XwwqIXyKeQ_jIuzE8hM';
+const H={apikey:KEY,Authorization:'Bearer '+KEY};
 const cal=document.getElementById('calendar'),title=document.getElementById('title'),formBox=document.getElementById('formBox'),msg=document.getElementById('message');
-let view,bookings=[];
-view=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+let bookings=[],view=new Date();view=new Date(view.getFullYear(),view.getMonth(),1);
 const months=['Januari','Februari','Mars','April','Maj','Juni','Juli','Augusti','September','Oktober','November','December'];
 function ds(y,m,d){return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0')}
 function booked(date,monter){return bookings.find(b=>b.booking_date===date&&b.monter===monter)}
-async function load(){const{data,error}=await db.from('bookings').select('booking_date,monter,organisation');if(error){console.error(error);return}bookings=data||[];render()}
 function render(){cal.innerHTML='';const y=view.getFullYear(),m=view.getMonth();title.textContent=months[m]+' '+y;let first=new Date(y,m,1).getDay();if(first===0)first=7;for(let i=1;i<first;i++){const e=document.createElement('div');e.className='day empty';cal.appendChild(e)}const days=new Date(y,m+1,0).getDate();for(let d=1;d<=days;d++){const date=ds(y,m,d),box=document.createElement('div');box.className='day';box.innerHTML='<div class="num">'+d+'</div>';['Monter 1','Monter 2'].forEach(monter=>{const b=booked(date,monter),btn=document.createElement('button');btn.type='button';btn.className='slot '+(b?'busy':'free');if(b){btn.textContent=monter+': Bokad – '+b.organisation;btn.disabled=true}else{btn.textContent=monter+': Ledig';btn.onclick=()=>openForm(date,monter)}box.appendChild(btn)});cal.appendChild(box)}}
+async function load(){render();try{const r=await fetch(URL+'/rest/v1/bookings?select=booking_date,monter,organisation',{headers:H});if(!r.ok)throw new Error(await r.text());bookings=await r.json();render()}catch(e){console.error(e)}}
 function openForm(date,monter){document.getElementById('date').value=date;document.getElementById('monter').value=monter;document.getElementById('formTitle').textContent='Boka '+monter;msg.textContent='';formBox.style.display='block';formBox.scrollIntoView({behavior:'smooth'})}
 document.getElementById('prev').onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()-1,1);render()};
 document.getElementById('next').onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()+1,1);render()};
-document.getElementById('form').onsubmit=async e=>{e.preventDefault();const button=document.getElementById('submit');button.disabled=true;button.textContent='Bokar...';const row={booking_date:document.getElementById('date').value,monter:document.getElementById('monter').value,name:document.getElementById('name').value,organisation:document.getElementById('organisation').value,email:document.getElementById('email').value,event_name:document.getElementById('event').value,location:document.getElementById('location').value,comment:document.getElementById('comment').value};const{error}=await db.from('bookings').insert([row]);if(error){msg.className='error';msg.textContent=error.code==='23505'?'Den här montern är redan bokad detta datum.':'Bokningen kunde inte sparas.'}else{msg.className='ok';msg.textContent='Klart! Montern är bokad.';await load()}button.disabled=false;button.textContent='Boka monter'};
-load();
+document.getElementById('form').onsubmit=async e=>{e.preventDefault();const button=document.getElementById('submit');button.disabled=true;button.textContent='Bokar...';const row={booking_date:document.getElementById('date').value,monter:document.getElementById('monter').value,name:document.getElementById('name').value,organisation:document.getElementById('organisation').value,email:document.getElementById('email').value,event_name:document.getElementById('event').value,location:document.getElementById('location').value,comment:document.getElementById('comment').value};try{const r=await fetch(URL+'/rest/v1/bookings',{method:'POST',headers:{...H,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(row)});if(!r.ok){const t=await r.text();if(t.includes('23505'))throw new Error('DUP');throw new Error(t)}msg.className='ok';msg.textContent='Klart! Montern är bokad.';await load()}catch(err){msg.className='error';msg.textContent=err.message==='DUP'?'Den här montern är redan bokad detta datum.':'Bokningen kunde inte sparas.';console.error(err)}button.disabled=false;button.textContent='Boka monter'};
+render();load();
 </script>
 </body>
 </html>
